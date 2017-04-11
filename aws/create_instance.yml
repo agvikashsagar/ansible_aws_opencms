@@ -1,0 +1,44 @@
+---
+- hosts: localhost
+  gather_facts: False
+  vars:
+    keypair: default_instance
+    instance_type: t2.micro
+    image: ami-6f68cf0f
+    region: us-west-2
+  tasks:
+
+    - name: Setting up Security/Firewall Group
+      ec2_group:
+         name: Vikash_AWS_Security_Grp
+         description: Rules for Allowing Traffic on port 80 and 443
+         region: us-west-2
+         rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+         rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+    - name: Launch instance
+      ec2:
+         key_name: "{{ keypair }}"
+         group: Vikash_AWS_Security_Grp 
+         instance_type: "{{ instance_type }}"
+         image: "{{ image }}"
+         wait: true
+         instance_tags:
+           Name: WEB01
+           Owner: Vikash
+         region: "{{ region }}"
+         aws_access_key: AKIAJTTMUHNCKDFDSOZQ
+         aws_secret_key: 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
+      register: ec2
+
+    - name: Print all ec2 variables
+      debug: var=ec2
