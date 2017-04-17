@@ -1,13 +1,4 @@
 ---
-- hosts: localhost
-  gather_facts: False
-  vars:
-    keypair: default_instance
-    instance_type: t2.micro
-    image: ami-6f68cf0f
-    region: us-west-2
-  tasks:
-
     - name: Setting up Security/Firewall Group
       ec2_group:
          name: Vikash_AWS_Security_Grp
@@ -39,8 +30,21 @@
          instance_tags:
            Name: WEB01
            Owner: Vikash
+         vpc_subnet_id: subnet-47e7071c 
+         assign_public_ip: yes
          region: "{{ region }}"
       register: ec2
-
+    - name: Allocating elastic IP to instance
+      ec2_eip:
+         in_vpc: yes
+         reuse_existing_ip_allowed: yes
+         state: present
+         region:  "{{ region }}"
+         instance_id: "{{ ec2.instance_ids[0] }}"
+      register: instance_eip
+    - name: Add the machine to the inventory
+      add_host:
+         hostname: "{{ ec2.instance_ids[0] }}"
+         groupname: web
     - name: Print all ec2 variables
       debug: var=ec2

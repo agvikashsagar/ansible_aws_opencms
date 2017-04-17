@@ -1,0 +1,6 @@
+---
+ # variables for all tasks
+ keypair: default_instance
+ instance_type: t2.micro
+ image: ami-6f68cf0f
+ region: us-west-2

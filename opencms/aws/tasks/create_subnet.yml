@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no 
+    - name: Create subnet for app servers
+      ec2_vpc_subnet:
+         state: present
+         vpc_id: vpc-0d82df6a 
+         cidr: 172.31.16.0/20
+         resource_tags:
+         Name: App
+      register: app_subnet

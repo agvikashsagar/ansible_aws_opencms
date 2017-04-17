@@ -1,0 +1,9 @@
+---
+ - hosts: localhost
+   gather_facts: False
+   vars_files:
+     - aws/vars/default.yml
+   tasks:
+     - include: aws/tasks/web_instance.yml
+     - include: aws/tasks/app_instance.yml
+     - include: aws/tasks/db_instance.yml

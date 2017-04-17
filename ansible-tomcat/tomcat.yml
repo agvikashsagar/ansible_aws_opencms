@@ -1,0 +1,17 @@
+---
+- hosts: app
+  sudo: yes
+  tasks:
+    - name: install tomcat
+      yum: name=tomcat state=latest
+    - name: Disallow password authentication
+      lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication no"
+              state=present
+      notify: Restart ssh
+    - name: Install Java 1.7
+      yum: name=java-1.7.0-openjdk state=present
+    - name: Configure Tomcat server
+      template: src=server.xml dest=/usr/share/tomcat/conf/
+     # notify: restart tomcat

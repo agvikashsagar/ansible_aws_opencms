@@ -1,0 +1,12 @@
+---
+- hosts: db
+  sudo: yes
+  tasks:
+    - name: install mysql
+      yum: name=mysql state=latest
+    - name: Disallow password authentication
+      lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication no"
+              state=present
+      notify: Restart ssh

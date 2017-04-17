@@ -1,13 +1,4 @@
 ---
-- hosts: localhost
-  gather_facts: False
-  vars:
-    keypair: default_instance
-    instance_type: t2.micro
-    image: ami-6f68cf0f
-    region: us-west-2
-  tasks:
-
     - name: Setting up Security/Firewall Group
       ec2_group:
          name: Vikash_AWS_Security_Grp
@@ -37,8 +28,10 @@
          image: "{{ image }}"
          wait: true
          instance_tags:
-           Name: WEB01
+           Name: APP01
            Owner: Vikash
+         vpc_subnet_id: subnet-47e7071c 
+         assign_public_ip: yes
          region: "{{ region }}"
       register: ec2
 

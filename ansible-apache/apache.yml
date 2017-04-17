@@ -1,0 +1,21 @@
+---
+- hosts: web
+  sudo: yes
+  tasks:
+    - name: install apache2
+      yum: name=httpd state=latest
+    - name: Disallow password authentication
+      lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^PasswordAuthentication"
+              line="PasswordAuthentication no"
+              state=present
+      notify: Restart ssh
+    - name: Enable mod_rewrite in Apache2
+      lineinfile: dest=/etc/httpd/conf/httpd.conf
+              regexp="^   AllowOverride"
+              line="AllowOverride All"
+              state=present
+#   - name: restart httpd
+ #    command: service httpd restart
+    - name: enabled mod_rewrite
+      apache2_module: name=rewrite state=present
